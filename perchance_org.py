@@ -4,13 +4,13 @@ import random, json, math
 class PerchanceContext:
     def __init__(
         self,
-        loreData: str,
+        LoreData: str,
         Username: str,
         UserDescription: str,
         BotName: str,
         BotDescription: str,
     ):
-        self.loreData = loreData
+        self.loreData = LoreData
         self.Username = Username
         self.UserDescription = UserDescription
         self.BotName = BotName
