@@ -82,6 +82,7 @@ class Perchance:
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
         }
+        _temp_headers = {**self.session.headers, **_temp_headers}
         _resp = self.session.get(f"https://text-generation.perchance.org/api/checkUserVerificationStatus?userKey={self.userKey}&__cacheBust={self.gen_cache_bust()}", headers=_temp_headers)
         _data = _resp.json()
         return _data["status"] == "verified"
