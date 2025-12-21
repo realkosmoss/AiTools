@@ -9,7 +9,7 @@ def main():
     test_chat = []
     
     PC = PerchanceContext(
-        loreData="we are in parking lot smoking crack",
+        LoreData="we are in parking lot smoking crack",
         Username="man",
         UserDescription="Im just a man.",
         BotName="girl",
@@ -32,3 +32,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
