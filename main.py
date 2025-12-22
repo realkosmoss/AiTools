@@ -1,5 +1,5 @@
 from curl_cffi import requests
-from perchance_org import Perchance, PerchanceContext
+from services.perchance_org import Perchance, PerchanceContext
 
 def main():
     session = ... # cmon you can make your own one
@@ -32,4 +32,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
