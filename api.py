@@ -135,3 +135,16 @@ async def chat(req: Request):
         "eval_count": 699,
         "eval_duration": 699999999
     }
+
+@app.post("/api/me")
+async def me():
+    return {
+        "id": "69999999-6999-6999-6999-699996999999",
+        "email": "user@example.com",
+        "name": "Jane Doe",
+        "bio": "example",
+        "avatarurl": "https://example.com/avatar.png",
+        "firstname": "Jane",
+        "lastname": "Doe",
+        "plan": "free"
+    }
