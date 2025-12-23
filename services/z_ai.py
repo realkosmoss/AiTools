@@ -377,7 +377,7 @@ class Z_AI:
         # for some fucking reason, doesnt seem to effect the actual response tho
         _resp = self.session.post(f"https://chat.z.ai/api/v2/chat/completions?{_query.string()}", headers=_temp_headers, json=_payload, timeout=120)
         out = []
-        got_delta = False
+        got_output = False
 
         for line in _resp.text.splitlines():
             if not line.startswith("data:"):
@@ -397,32 +397,32 @@ class Z_AI:
                 continue
 
             delta = data.get("delta_content")
-            if delta is not None:
+            if isinstance(delta, str):
                 out.append(delta)
-                got_delta = True
+                got_output = True
                 continue
 
             edit_index = data.get("edit_index")
             edit_content = data.get("edit_content")
             if (
-                got_delta
-                and isinstance(edit_index, int)
-                and isinstance(edit_content, str)
+                isinstance(edit_index, int) and
+                isinstance(edit_content, str)
             ):
                 current = "".join(out)
                 out = [current[:edit_index] + edit_content]
+                got_output = True
                 continue
 
             if data.get("done") is True:
                 break
 
             error = data.get("error")
-            if error and not got_delta:
+            if error and not got_output:
                 raise RuntimeError(
                     f"{error.get('code')}: {error.get('detail')}"
                 )
 
-        if not got_delta:
-            raise RuntimeError("No model output received")
+        if not got_output:
+            raise RuntimeError("No model output received", _resp.text)
 
         return "".join(out)
