@@ -145,7 +145,7 @@ class Cloudflare:
         )
         self.ws.send_json({"args":[],"id":f"{self.Random.Dv(8)}","method":"getModels","type":"rpc"})
 
-    def _change_model(self, model):
+    def _change_model(self, model, system = "You are a helpful assistant."):
         # send it and pray
         self.ws.send_json({
             "type": "cf_agent_state",
@@ -153,7 +153,7 @@ class Cloudflare:
                 "model": model,
                 "temperature": 1,
                 "stream": True,
-                "system": "You are a helpful assistant."
+                "system": system
             }
         })
 
@@ -210,13 +210,13 @@ class Cloudflare:
             "text": "".join(text).strip(),
         }
 
-    def generate(self, messages: list, model: str):
+    def generate(self, messages: list, model: str, *, system=None):
         if not self.last_model:
             self.last_model = model
-            self._change_model(model)
+            self._change_model(model, system)
         else:
             if not self.last_model == model:
-                self._change_model(model)
+                self._change_model(model, system)
                 self.last_model = model
 
         _request_id = self.Random.Dv(8)
