@@ -1,14 +1,16 @@
 # pip install fastapi uvicorn
 # uvicorn api:app --host 127.0.0.1 --port 11434
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.concurrency import run_in_threadpool
 from datetime import datetime, timezone
-from fastapi import Request
 
 # from services.perchance_org import Perchance, PerchanceContext # not adding this, cant be bothered really
 from services.z_ai import Z_AI
 from services.cloudflare_com import Cloudflare
 
-session = ...
+from fingerprints import make_galaxy_s23
+
+session = make_galaxy_s23()
 
 # fucking services, 100% not the best way to do it but who the fuck cares
 # hmm, probably mutating the session, both z.ai and cloudflare, fuck
@@ -142,9 +144,18 @@ async def chat(req: Request):
         if "_thinking" in _model:
             _model = _model.replace("_thinking", "")
             thinking = True
-        response = zai.generate(messages, _model, thinking=thinking)
+        response = await run_in_threadpool(
+            zai.generate,
+            messages,
+            _model,
+            thinking=thinking,
+        )
     elif provider == "cloudflare":
-        response = cf.generate(messages, _model)
+        response = await run_in_threadpool(
+            cf.generate,
+            messages,
+            _model,
+        )
     else:
         raise RuntimeError(f"Unsupported provider: {provider}")
 
@@ -217,9 +228,18 @@ async def chat(req: Request):
         if "_thinking" in _model:
             _model = _model.replace("_thinking", "")
             thinking = True
-        response = zai.generate(messages, _model, thinking=thinking)
+        response = await run_in_threadpool(
+            zai.generate,
+            messages,
+            _model,
+            thinking=thinking,
+        )
     elif provider == "cloudflare":
-        response = cf.generate(messages, _model)
+        response = await run_in_threadpool(
+            cf.generate,
+            messages,
+            _model,
+        )
     else:
         raise RuntimeError(f"Unsupported provider: {provider}")
 
