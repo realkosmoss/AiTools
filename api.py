@@ -8,9 +8,7 @@ from datetime import datetime, timezone
 from services.z_ai import Z_AI
 from services.cloudflare_com import Cloudflare
 
-from fingerprints import make_galaxy_s23
-
-session = make_galaxy_s23()
+session = ...
 
 # fucking services, 100% not the best way to do it but who the fuck cares
 # hmm, probably mutating the session, both z.ai and cloudflare, fuck
@@ -303,3 +301,4 @@ async def chat(req: Request):
         event_stream(),
         media_type="text/event-stream"
     )
+
