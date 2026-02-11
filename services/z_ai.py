@@ -130,7 +130,6 @@ class _ShittyFuckingContextHandler:
             "{{USER_LANGUAGE}}": "en-US",
         }
 
-
 class _ShittyFuckingRequestBuilder:
     @staticmethod
     def build(model: str, internal_messages: list,
@@ -175,7 +174,8 @@ class _ShittyFuckingRequestBuilder:
 
 class Z_AI:
     class Models:
-        GLM_4_7: str        = "glm-4.7"
+        glm_5: str          = "glm-5"
+        glm_4_7: str        = "glm-4.7"
         glm_4_6v: str       = "glm-4.6v"
         glm_4_6: str        = "GLM-4-6-API-V1"
         glm_4_5v: str       = "0727-360B-API"
@@ -286,7 +286,8 @@ class Z_AI:
         last_user = next(m for m in reversed(messages) if m["role"] == "user")
 
         msg_id = str(uuid.uuid4())
-        now_ms = int(time.time() * 1000)
+        now_sec = int(time.time())
+        now_ms = now_sec * 1000
 
         payload = {
             "chat": {
@@ -301,11 +302,8 @@ class Z_AI:
                             "parentId": None,
                             "childrenIds": [],
                             "role": "user",
-                            "content": {
-                                "type": "text",
-                                "text": last_user["content"]
-                            },
-                            "timestamp": now_ms,
+                            "content": last_user["content"],
+                            "timestamp": now_sec,
                             "models": [model],
                         }
                     },
@@ -319,7 +317,6 @@ class Z_AI:
                     {"type": "mcp", "server": "image-search", "status": "hidden"},
                     {"type": "mcp", "server": "deep-research", "status": "hidden"},
                     {"type": "tool_selector", "server": "tool_selector", "status": "hidden"},
-                    {"type": "mcp", "server": "advanced-search", "status": "hidden"},
                 ],
                 "mcp_servers": [],
                 "enable_thinking": False,
@@ -377,7 +374,7 @@ class Z_AI:
 
         # returns: data: {"data":{"content":"","done":true,"error":{"code":"INTERNAL_ERROR","detail":"Oops, something went wrong. Please refresh the page or try again later."}},"type":"chat:completion"}
         # for some fucking reason, doesnt seem to effect the actual response tho
-        _resp = self.session.post(f"https://chat.z.ai/api/v2/chat/completions?{_query.string()}", headers=_temp_headers, json=_payload, timeout=120)
+        _resp = self.session.post(f"https://chat.z.ai/api/v2/chat/completions?{_query.string()}", headers=_temp_headers, json=_payload, timeout=300)
         out = []
         got_output = False
 
